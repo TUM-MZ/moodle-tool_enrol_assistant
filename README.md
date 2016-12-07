@@ -18,4 +18,4 @@ In moodle root folder:
 Usage
 ------
 
-At the moment, you can only access the tool by going to `https://{you_moodle_url}/admin/tool/enrol_assistant/view.php`
+The tool is available under Site Administration->Users->Enrol assistant
