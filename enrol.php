@@ -24,14 +24,20 @@
  */
 require_once('../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+global $DB, $CFG, $PAGE, $OUTPUT;
+
+$PAGE->set_url('/admin/tool/enrol_assistant/enrol.php');
+$PAGE->set_pagelayout('admin');
+
 
 require_login();
 require_capability('moodle/site:config', context_system::instance());
-global $DB, $CFG, $PAGE;
 
 $PAGE->set_context(context_system::instance());
-$PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
-
+$PAGE->set_title(get_string('heading', 'tool_enrol_assistant'));
+//$PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
+$PAGE->set_heading('test');
+echo $OUTPUT->header();
 
 //Dozent, Student, Tutor... 3,4,5,6,8
 $userrole = $_POST["userrole"];
@@ -79,4 +85,6 @@ foreach ($userinfo as $userid) {
 }
 ?>
 <a href="./view.php" target="_self">Zurück</a>
+
+<?php echo $OUTPUT->footer(); ?>
 

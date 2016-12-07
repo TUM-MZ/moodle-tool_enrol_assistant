@@ -25,13 +25,19 @@
 require_once('../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
+$PAGE->set_url('/admin/tool/enrol_assistant/view.php');
+$PAGE->set_pagelayout('admin');
+
 require_login();
 require_capability('moodle/site:config', context_system::instance());
 
-global $DB, $CFG, $PAGE;
+global $DB, $CFG, $PAGE, $OUTPUT;
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
+$PAGE->set_title(get_string('heading', 'tool_enrol_assistant'));
+
+echo $OUTPUT->header();
 
 if (array_key_exists('submit3', $_POST)) {
     echo "<p class='message'>Selection cleared</p>";
@@ -242,7 +248,7 @@ if (array_key_exists('liste04', $_REQUEST)) {
     </form>
 </table>
 
-<form name="f003" action="freisch.php" method="post">
+<form name="f003" action="enrol.php" method="post">
     <tr>
         <td colspan="3">
             Rollen:<br/><br/>
@@ -273,3 +279,6 @@ if (array_key_exists('liste04', $_REQUEST)) {
 <form action="view.php" method="post" name="f004" id="f003">
     <input type="submit" name="submit3" value="Reset" class="button01"/>
 </form>
+
+
+<?php echo $OUTPUT->footer(); ?>
