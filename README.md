@@ -3,6 +3,11 @@ Moodle enrolment assistant
 
 A helper to enrol multiple users to multiple courses.
 
+DISCLAIMER
+-----------
+
+This version is a very much "in development". Don't use it in production, yet!
+
 Installation
 -------------
 
