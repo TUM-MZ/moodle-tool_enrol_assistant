@@ -13,7 +13,7 @@ Installation
 
 In moodle root folder:
 
-    git clone {repo address} admin/tool/enrol_assistant
+    git clone https://github.com/TUM-MZ/moodle-tool_enrol_assistant admin/tool/enrol_assistant
 
 Usage
 ------
