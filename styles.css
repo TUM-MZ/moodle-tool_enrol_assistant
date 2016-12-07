@@ -1,0 +1,98 @@
+@import url(http://fonts.googleapis.com/css?family=Ropa+Sans:400,400italic);
+
+body, th, td {
+    font-family			: Verdana, Arial, Helvetica, sans-serif;
+    font-size			: 12px;
+}
+
+body {
+    margin-bottom		: 10px;
+    margin-top			: 10px;
+    margin-left			: 10px;
+    margin-right		: 10px;
+}
+
+.liste01 {
+    font-size			: 10px;
+    font-weight			: normal;
+    color				: #666666;
+}
+
+.liste02 {
+    font-size			: 10px;
+    font-weight			: normal;
+    color				: #0099CC;
+}
+
+a:link {
+    color				: #0099CC;
+    text-decoration		: none;
+}
+
+a:visited {
+    color				: #0099CC;
+    text-decoration		: none;
+}
+
+a:active {
+    color				: #0099CC;
+    text-decoration		: underline;
+}
+
+a:hover {
+    color				: #0099CC;
+    text-decoration		: underline;
+}
+
+#header_div {
+    width				: 940px;
+    background-color	: #EAEAEA;
+    border				: 1px dotted #000000;
+    font-family			: 'Ropa Sans';
+    font-size 			: 24px;
+    font-weight			: bold;
+    padding-left		: 20px;
+    padding-top			: 20px;
+    padding-bottom		: 20px;
+}
+
+.table01 {
+    font-weight			: bold;
+    color				: #000000;
+    border				: 1px dotted #000000;
+}
+
+.table02 {
+    border				: 1px dotted #000000;
+}
+
+.button01 {
+    font-weight			: bold;
+    font-size			: 10px;
+    color				: #000000;
+    border				: 1px solid #CCCCCC;
+    background-color	: #FFFFFF;
+}
+
+#setzero {
+    padding-top			: 3px;
+    padding-bottom		: 3px;
+    width				: 300px;
+    font-weight			: bold;
+    font-size			: 10px;
+    color				: #000000;
+    border				: 0;
+    background-color	: #FFFFFF;
+}
+
+#navileiste {
+    position            : absolute;
+    background-color    : #C4E1FF;
+    width               : 180px;
+    height              : 400px;
+    padding             : 12px;
+    border              : 1px dotted #000000;
+    margin-left         : 870px;
+    margin-top          : 78px;
+    z-index             : 1;
+}
