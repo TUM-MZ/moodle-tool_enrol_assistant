@@ -33,7 +33,8 @@ require_capability('moodle/site:config', context_system::instance());
 
 global $DB, $CFG, $PAGE, $OUTPUT;
 
-$PAGE->set_context(context_system::instance());
+$context = context_system::instance();
+$PAGE->set_context($context);
 $PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
 $PAGE->set_title(get_string('heading', 'tool_enrol_assistant'));
 
@@ -113,40 +114,38 @@ if (array_key_exists('liste04', $_REQUEST)) {
             <td width="450" align="center">
                 <select name="liste01[]" size="18" multiple style="width:450px;" class="liste01">
                     <?php
-                    if (empty($_POST['such_nutzer'])) {
-                        $such_nutzer = "0655dbc8f8681d7318ebca8b2bc722a9";
-                    } else {
-                        $such_nutzer = $_POST['such_nutzer'];
-                    }
+                    if (array_key_exists('such_nutzer', $_POST)) {
+                        $such_nutzer = strtolower($_POST['such_nutzer']);
 
-                    $sql = "SELECT * FROM {user} " .
-                        "WHERE deleted != 1 " .
-                        "  AND ( idnumber LIKE '%" . $such_nutzer . "%' OR firstname LIKE '%" . $such_nutzer . "%' OR lastname LIKE '%" . $such_nutzer . "%' OR  email LIKE '%" . $such_nutzer . "%' ) " .
-                        "ORDER BY lastname ASC";
-                    $result = $DB->get_records_sql($sql);
-                    foreach ($result as $row) {
-                        $id = $row->id;
-                        $nachname = $row->lastname;
-                        $nachname = utf8_decode($nachname);
-                        $vorname = $row->firstname;
-                        $vorname = utf8_decode($vorname);
-                        $emailadresse = $row->email;
-                        $username = $row->username;
+                        $sql = "SELECT * FROM {user} " .
+                            "WHERE deleted != 1 " .
+                            "  AND ( lower(idnumber) LIKE '%" . $such_nutzer . "%' OR lower(firstname) LIKE '%" . $such_nutzer . "%' OR lower(lastname) LIKE '%" . $such_nutzer . "%' OR  lower(email) LIKE '%" . $such_nutzer . "%' ) " .
+                            "ORDER BY lastname ASC";
+                        $result = $DB->get_records_sql($sql);
+                        foreach ($result as $row) {
+                            $id = $row->id;
+                            $nachname = $row->lastname;
+                            $nachname = utf8_decode($nachname);
+                            $vorname = $row->firstname;
+                            $vorname = utf8_decode($vorname);
+                            $emailadresse = $row->email;
+                            $username = $row->username;
 
-                        $checkstatus = 0;
-                        foreach ($_SESSION['werte'] as $checkid) {
-                            if ($id == $checkid) {
-                                $checkstatus = 1;
+                            $checkstatus = 0;
+                            foreach ($_SESSION['werte'] as $checkid) {
+                                if ($id == $checkid) {
+                                    $checkstatus = 1;
+                                } else {
+                                }
+                            }
+
+                            if ($checkstatus == 1) {
                             } else {
+                                echo "<option value=\"$id\" title=\"$username\">$nachname $vorname ($emailadresse)</option>";
                             }
                         }
-
-                        if ($checkstatus == 1) {
-                        } else {
-                            echo "<option value=\"$id\" title=\"$username\">$nachname $vorname ($emailadresse)</option>";
-                        }
                     }
-                    ?>
+                ?>
                 </select>
             </td>
             <td width="60" align="center">
@@ -193,20 +192,18 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste03[]" size="18" multiple style="width:450px;" class="liste01">
                     <?php
                     if (array_key_exists('such_kurse', $_POST)) {
-                        $such_kurse = $_POST['such_kurse'];
+                        $such_kurse = strtolower($_POST['such_kurse']);
 
                         $sql = "SELECT * FROM {course} 
                          WHERE id != 1 
-                           AND (fullname LIKE '%" . $such_kurse . "%' OR shortname LIKE '%" . $such_kurse . "%' OR idnumber LIKE '%" . $such_kurse . "%')
+                           AND (lower(fullname) LIKE '%" . $such_kurse . "%' OR lower(shortname) LIKE '%" . $such_kurse . "%' OR idnumber LIKE '%" . $such_kurse . "%')
                       ORDER BY fullname ASC";
                         $result = $DB->get_records_sql($sql);
                         foreach ($result as $row) {
                             $kid = $row->id;
                             $idnumber = $row->idnumber;
                             $fullname = $row->fullname;
-                            $fullname = utf8_decode($fullname);
                             $shortname = $row->shortname;
-                            $shortname = utf8_decode($shortname);
 
                             $checkstatusk = 0;
                             foreach ($_SESSION['kurse'] as $checkkid) {
@@ -258,13 +255,13 @@ if (array_key_exists('liste04', $_REQUEST)) {
         <td width="450" align="center" rows="6">
             <select name="userrole" size="11" style="width:450px" class="liste01">
                 <?php
-                $sql = "SELECT * FROM {role} ORDER BY id";
-                $result = $DB->get_records_sql($sql);
+                $allroles = role_fix_names(get_all_roles($context), $context);
+
+                $result = $DB->get_records('role');
                 foreach ($result as $row) {
                     $show_role_id = $row->id;
-                    $show_role_fn = $row->name;
-                    $show_role_fn = utf8_decode($show_role_fn);
-                    echo "<option value=\"$show_role_id\">$show_role_fn</option>";
+                    $show_role_name = $allroles[$row->id]->localname;
+                    echo "<option value=\"$show_role_id\">$show_role_name</option>";
                 }
                 ?>
             </select>

@@ -46,7 +46,7 @@ $userrole = $_POST["userrole"];
 $userinfo = $_SESSION['werte'];
 
 //KursID von Moodle mdl_course.id
-$userkurs = $_SESSION['kurse'];
+$usercourses = $_SESSION['kurse'];
 ?>
 
 <div id="header_div" align="center"><?php get_string('heading', 'tool_enrol_assistant'); ?></div>
@@ -65,10 +65,15 @@ foreach ($userinfo as $userid) {
     $show_user_em = $userdata->email;
     $show_user_mk = $userdata->idnumber;
 
+
+    $context = context_system::instance();
+    $allroles = role_fix_names(get_all_roles($context), $context);
+    $role_name = $allroles[$userrole]->localname;
+
     echo "<strong>$show_user_nn $show_user_vn (id: $userid), $show_user_em ($show_user_mk)</strong><br /><br />";
 
     echo "<ul class='course_list'>";
-    foreach ($userkurs as $courseid) {
+    foreach ($usercourses as $courseid) {
 
         if (!($coursedata = $DB->get_record('course', array('id' => $courseid)))) {
             echo "<li>Course <strong>$courseid</strong> not found</li>";
@@ -79,7 +84,7 @@ foreach ($userinfo as $userid) {
             array('courseid' => $courseid, 'enrol' => 'manual'));
 
         $plugin->enrol_user($instance, $userid, $userrole);
-        echo "Added to \"$coursedata->fullname\" (id: $courseid) as $userrole</u>!<br />";
+        echo "Added to \"$coursedata->fullname\" (id: $courseid) as $role_name</u>!<br />";
     }
     echo "</ul>";
 }
