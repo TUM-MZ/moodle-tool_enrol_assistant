@@ -35,7 +35,7 @@ global $DB, $CFG, $PAGE, $OUTPUT;
 
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
+    $PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
 $PAGE->set_title(get_string('heading', 'tool_enrol_assistant'));
 
 echo $OUTPUT->header();
@@ -115,13 +115,13 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste01[]" size="18" multiple style="width:450px;" class="liste01">
                     <?php
                     if (array_key_exists('such_nutzer', $_POST)) {
-                        $such_nutzer = strtolower($_POST['such_nutzer']);
+                        $such_nutzer = '%'. strtolower($_POST['such_nutzer']) . '%';
 
                         $sql = "SELECT * FROM {user} " .
                             "WHERE deleted != 1 " .
-                            "  AND ( lower(idnumber) LIKE '%" . $such_nutzer . "%' OR lower(firstname) LIKE '%" . $such_nutzer . "%' OR lower(lastname) LIKE '%" . $such_nutzer . "%' OR  lower(email) LIKE '%" . $such_nutzer . "%' ) " .
+                            "  AND ( lower(idnumber) LIKE ? OR lower(firstname) LIKE ? OR lower(lastname) LIKE ? OR  lower(email) LIKE ? ) " .
                             "ORDER BY lastname ASC";
-                        $result = $DB->get_records_sql($sql);
+                        $result = $DB->get_records_sql($sql, array($such_nutzer, $such_nutzer, $such_nutzer, $such_nutzer));
                         foreach ($result as $row) {
                             $id = $row->id;
                             $nachname = $row->lastname;
@@ -155,13 +155,11 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste02[]" size="18" multiple style="width:450px;" class="liste02">
                     <?php
                     foreach ($_SESSION['werte'] as $userid) {
-                        $sql = "SELECT * FROM {user} WHERE id = '" . $userid . "' LIMIT 1";
-                        $result = $DB->get_records_sql($sql);
-                        foreach ($result as $row) {
-                            $nachname = $row->lastname;
-                            $vorname = $row->firstname;
-                            $emailadresse = $row->email;
-                        }
+                        $sql = "SELECT * FROM {user} WHERE id = ?";
+                        $result = $DB->get_record_sql($sql, array($userid));
+                        $nachname = $result->lastname;
+                        $vorname = $result->firstname;
+                        $emailadresse = $result->email;
                         echo "<option value=\"$userid\">$nachname $vorname ($emailadresse)</option>";
                     }
                     ?>
@@ -192,13 +190,13 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste03[]" size="18" multiple style="width:450px;" class="liste01">
                     <?php
                     if (array_key_exists('such_kurse', $_POST)) {
-                        $such_kurse = strtolower($_POST['such_kurse']);
+                        $such_kurse = '%' . strtolower($_POST['such_kurse']) . '%';
 
                         $sql = "SELECT * FROM {course} 
                          WHERE id != 1 
-                           AND (lower(fullname) LIKE '%" . $such_kurse . "%' OR lower(shortname) LIKE '%" . $such_kurse . "%' OR idnumber LIKE '%" . $such_kurse . "%')
+                           AND (lower(fullname) LIKE ? OR lower(shortname) LIKE ? OR idnumber LIKE ?)
                       ORDER BY fullname ASC";
-                        $result = $DB->get_records_sql($sql);
+                        $result = $DB->get_records_sql($sql, array($such_kurse, $such_kurse, $such_kurse));
                         foreach ($result as $row) {
                             $kid = $row->id;
                             $idnumber = $row->idnumber;
@@ -229,13 +227,11 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste04[]" size="18" multiple style="width:450px;" class="liste02">
                     <?php
                     foreach ($_SESSION['kurse'] as $kurseid) {
-                        $sql = "SELECT * FROM {course} WHERE id = '" . $kurseid . "' LIMIT 1";
-                        $result = $DB->get_records_sql($sql);
-                        foreach ($result as $row) {
-                            $idnumber = $row->idnumber;
-                            $fullname = $row->fullname;
-                            $shortname = $row->shortname;
-                        }
+                        $sql = "SELECT * FROM {course} WHERE id = ?";
+                        $result = $DB->get_record_sql($sql, array($kurseid));
+                        $idnumber = $result->idnumber;
+                        $fullname = $result->fullname;
+                        $shortname = $result->shortname;
                         echo "<option value=\"$kurseid\" title=\"$shortname\">[$idnumber] $fullname</option>";
                     }
                     ?>
