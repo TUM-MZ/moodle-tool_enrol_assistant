@@ -49,8 +49,6 @@ $userinfo = $_SESSION['werte'];
 $usercourses = $_SESSION['kurse'];
 ?>
 
-<div id="header_div" align="center"><?php get_string('heading', 'tool_enrol_assistant'); ?></div>
-
 <?php
 $plugin = enrol_get_plugin('manual');
 
@@ -89,7 +87,7 @@ foreach ($userinfo as $userid) {
     echo "</ul>";
 }
 ?>
-<a href="./view.php" target="_self">Zurück</a>
+<a href="./view.php" target="_self"><?php echo get_string('back') ?></a>
 
 <?php echo $OUTPUT->footer(); ?>
 

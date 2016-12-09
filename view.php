@@ -35,7 +35,7 @@ global $DB, $CFG, $PAGE, $OUTPUT;
 
 $context = context_system::instance();
 $PAGE->set_context($context);
-    $PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
+$PAGE->set_heading(get_string('heading', 'tool_enrol_assistant'));
 $PAGE->set_title(get_string('heading', 'tool_enrol_assistant'));
 
 echo $OUTPUT->header();
@@ -92,19 +92,18 @@ if (array_key_exists('liste04', $_REQUEST)) {
 
 ?>
 
-<div id="header_div" align="center"><?php get_string('heading', 'tool_enrol_assistant'); ?></div>
-<br/>
 <table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
     <tr>
         <td colspan="3">
-            Benutzer:<br/><br/>
+            <?php echo get_string('users', 'tool_enrol_assistant'); ?>:
         </td>
     </tr>
     <tr>
         <form name="s001" action="view.php" method="post">
             <td colspan="3">
                 <input name="such_nutzer" type="text" style="width:350px;" class="liste01"/>
-                <input type="submit" name="submit_s1" value="suche" class="button01"/>
+                <input type="submit" name="submit_s1"
+                       value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
                 <br/><br/>
             </td>
         </form>
@@ -115,7 +114,7 @@ if (array_key_exists('liste04', $_REQUEST)) {
                 <select name="liste01[]" size="18" multiple style="width:450px;" class="liste01">
                     <?php
                     if (array_key_exists('such_nutzer', $_POST)) {
-                        $such_nutzer = '%'. strtolower($_POST['such_nutzer']) . '%';
+                        $such_nutzer = '%' . strtolower($_POST['such_nutzer']) . '%';
 
                         $sql = "SELECT * FROM {user} " .
                             "WHERE deleted != 1 " .
@@ -145,7 +144,7 @@ if (array_key_exists('liste04', $_REQUEST)) {
                             }
                         }
                     }
-                ?>
+                    ?>
                 </select>
             </td>
             <td width="60" align="center">
@@ -172,14 +171,15 @@ if (array_key_exists('liste04', $_REQUEST)) {
 <table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
     <tr>
         <td colspan="3">
-            Kurse:<br/><br/>
+            <?php echo get_string('courses', 'tool_enrol_assistant'); ?>:
         </td>
     </tr>
     <tr>
         <form name="s002" action="view.php" method="post">
             <td colspan="3">
                 <input name="such_kurse" type="text" style="width:350px;" class="liste01"/>
-                <input type="submit" name="submit_s2" value="suche" class="button01"/>
+                <input type="submit" name="submit_s2"
+                       value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
                 <br/><br/>
             </td>
         </form>
@@ -241,37 +241,46 @@ if (array_key_exists('liste04', $_REQUEST)) {
     </form>
 </table>
 
-<form name="f003" action="enrol.php" method="post">
-    <tr>
-        <td colspan="3">
-            Rollen:<br/><br/>
-        </td>
-    </tr>
-    <tr>
-        <td width="450" align="center" rows="6">
-            <select name="userrole" size="11" style="width:450px" class="liste01">
-                <?php
-                $allroles = role_fix_names(get_all_roles($context), $context);
+<table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
+    <form name="f003" action="enrol.php" method="post">
+        <tr>
+            <td colspan="3">
+                <?php echo get_string('roles', 'tool_enrol_assistant'); ?>:
+            </td>
+        </tr>
+        <tr>
+            <td width="450" align="center" rows="6">
+                <select name="userrole" size="11" style="width:450px" class="liste01">
+                    <?php
+                    $allroles = role_fix_names(get_all_roles($context), $context);
 
-                $result = $DB->get_records('role');
-                foreach ($result as $row) {
-                    $show_role_id = $row->id;
-                    $show_role_name = $allroles[$row->id]->localname;
-                    echo "<option value=\"$show_role_id\">$show_role_name</option>";
-                }
-                ?>
-            </select>
-        </td>
-        <td width="60" align="center">&nbsp;</td>
-        <td width="450" align="center">
-            <input type="submit" name="submit" value="Enrol all." class="button01"/>
-        </td>
-    </tr>
-</form>
+                    $result = $DB->get_records('role');
+                    foreach ($result as $row) {
+                        $show_role_id = $row->id;
+                        $show_role_name = $allroles[$row->id]->localname;
+                        echo "<option value=\"$show_role_id\">$show_role_name</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+            <td width="60" align="center">&nbsp;</td>
+            <td width="450" align="center">
+                <input type="submit" name="submit" value="<?php echo get_string('enroll', 'tool_enrol_assistant'); ?>"
+                       class="button01"/>
+            </td>
+        </tr>
+    </form>
 
-<form action="view.php" method="post" name="f004" id="f003">
-    <input type="submit" name="submit3" value="Reset" class="button01"/>
-</form>
+    <tr>
+        <td>
+            <form action="view.php" method="post" name="f004" id="f003">
+                <input type="submit" name="submit3" value="<?php echo get_string('reset', 'tool_enrol_assistant'); ?>"
+                       class="button01"/>
+            </form>
+        </td>
+        <td></td><td></td>
+    </tr>
+</table>
 
 
 <?php echo $OUTPUT->footer(); ?>

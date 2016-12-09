@@ -26,3 +26,9 @@
 
 $string['pluginname'] = 'Enrol assistant';
 $string['heading'] = 'Enrol Assistant';
+$string['search'] = 'Search';
+$string['reset'] = 'Reset';
+$string['enroll'] = 'Enroll all';
+$string['users'] = 'Users';
+$string['courses'] = 'Courses';
+$string['roles'] = 'Roles';
