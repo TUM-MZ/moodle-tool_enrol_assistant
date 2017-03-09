@@ -92,195 +92,196 @@ if (array_key_exists('liste04', $_REQUEST)) {
 
 ?>
 
-<table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
-    <tr>
-        <td colspan="3">
-            <?php echo get_string('users', 'tool_enrol_assistant'); ?>:
-        </td>
-    </tr>
-    <tr>
-        <form name="s001" action="view.php" method="post">
-            <td colspan="3">
-                <input name="such_nutzer" type="text" style="width:350px;" class="liste01"/>
-                <input type="submit" name="submit_s1"
-                       value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
-                <br/><br/>
-            </td>
-        </form>
-    </tr>
-    <form name="f001" action="view.php" method="post">
-        <tr>
-            <td width="450" align="center">
-                <select name="liste01[]" size="18" multiple style="width:450px;" class="liste01">
-                    <?php
-                    if (array_key_exists('such_nutzer', $_POST)) {
-                        $such_nutzer = '%' . strtolower($_POST['such_nutzer']) . '%';
-
-                        $sql = "SELECT * FROM {user} " .
-                            "WHERE deleted != 1 " .
-                            "  AND ( lower(idnumber) LIKE ? OR lower(firstname) LIKE ? OR lower(lastname) LIKE ? OR  lower(email) LIKE ? ) " .
-                            "ORDER BY lastname ASC";
-                        $result = $DB->get_records_sql($sql, array($such_nutzer, $such_nutzer, $such_nutzer, $such_nutzer));
-                        foreach ($result as $row) {
-                            $id = $row->id;
-                            $nachname = $row->lastname;
-                            $nachname = utf8_decode($nachname);
-                            $vorname = $row->firstname;
-                            $vorname = utf8_decode($vorname);
-                            $emailadresse = $row->email;
-                            $username = $row->username;
-
-                            $checkstatus = 0;
-                            foreach ($_SESSION['werte'] as $checkid) {
-                                if ($id == $checkid) {
-                                    $checkstatus = 1;
-                                } else {
-                                }
-                            }
-
-                            if ($checkstatus == 1) {
-                            } else {
-                                echo "<option value=\"$id\" title=\"$username\">$nachname $vorname ($emailadresse)</option>";
-                            }
-                        }
-                    }
-                    ?>
-                </select>
-            </td>
-            <td width="60" align="center">
-                <input type="submit" name="ein" value=" &lt;=&gt; " class="button01"/>
-            </td>
-            <td width="450" align="center">
-                <select name="liste02[]" size="18" multiple style="width:450px;" class="liste02">
-                    <?php
-                    foreach ($_SESSION['werte'] as $userid) {
-                        $sql = "SELECT * FROM {user} WHERE id = ?";
-                        $result = $DB->get_record_sql($sql, array($userid));
-                        $nachname = $result->lastname;
-                        $vorname = $result->firstname;
-                        $emailadresse = $result->email;
-                        echo "<option value=\"$userid\">$nachname $vorname ($emailadresse)</option>";
-                    }
-                    ?>
-                </select>
-            </td>
-        </tr>
-    </form>
-</table>
-<br/>
-<table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
-    <tr>
-        <td colspan="3">
-            <?php echo get_string('courses', 'tool_enrol_assistant'); ?>:
-        </td>
-    </tr>
-    <tr>
-        <form name="s002" action="view.php" method="post">
-            <td colspan="3">
-                <input name="such_kurse" type="text" style="width:350px;" class="liste01"/>
-                <input type="submit" name="submit_s2"
-                       value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
-                <br/><br/>
-            </td>
-        </form>
-    </tr>
-    <form name="f002" action="view.php" method="post">
-        <tr>
-            <td width="450" align="center">
-                <select name="liste03[]" size="18" multiple style="width:450px;" class="liste01">
-                    <?php
-                    if (array_key_exists('such_kurse', $_POST)) {
-                        $such_kurse = '%' . strtolower($_POST['such_kurse']) . '%';
-
-                        $sql = "SELECT * FROM {course} 
-                         WHERE id != 1 
-                           AND (lower(fullname) LIKE ? OR lower(shortname) LIKE ? OR idnumber LIKE ?)
-                      ORDER BY fullname ASC";
-                        $result = $DB->get_records_sql($sql, array($such_kurse, $such_kurse, $such_kurse));
-                        foreach ($result as $row) {
-                            $kid = $row->id;
-                            $idnumber = $row->idnumber;
-                            $fullname = $row->fullname;
-                            $shortname = $row->shortname;
-
-                            $checkstatusk = 0;
-                            foreach ($_SESSION['kurse'] as $checkkid) {
-                                if ($kid == $checkkid) {
-                                    $checkstatusk = 1;
-                                } else {
-                                }
-                            }
-
-                            if ($checkstatusk == 1) {
-                            } else {
-                                echo "<option value=\"$kid\" title=\"$shortname\">[$idnumber] $fullname</option>";
-                            }
-                        }
-                    }
-                    ?>
-                </select>
-            </td>
-            <td width="60" align="center">
-                <input type="submit" name="kein" value=" &lt;=&gt; " class="button01"/>
-            </td>
-            <td width="450" align="center">
-                <select name="liste04[]" size="18" multiple style="width:450px;" class="liste02">
-                    <?php
-                    foreach ($_SESSION['kurse'] as $kurseid) {
-                        $sql = "SELECT * FROM {course} WHERE id = ?";
-                        $result = $DB->get_record_sql($sql, array($kurseid));
-                        $idnumber = $result->idnumber;
-                        $fullname = $result->fullname;
-                        $shortname = $result->shortname;
-                        echo "<option value=\"$kurseid\" title=\"$shortname\">[$idnumber] $fullname</option>";
-                    }
-                    ?>
-                </select>
-            </td>
-        </tr>
-    </form>
-</table>
-
-<table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
-    <form name="f003" action="enrol.php" method="post">
+<div id="enrol_assistant">
+    <table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
         <tr>
             <td colspan="3">
-                <?php echo get_string('roles', 'tool_enrol_assistant'); ?>:
+                <?php echo get_string('users', 'tool_enrol_assistant'); ?>:
             </td>
         </tr>
         <tr>
-            <td width="450" align="center" rows="6">
-                <select name="userrole" size="11" style="width:450px" class="liste01">
-                    <?php
-                    $allroles = role_fix_names(get_all_roles($context), $context);
-
-                    $result = $DB->get_records('role');
-                    foreach ($result as $row) {
-                        $show_role_id = $row->id;
-                        $show_role_name = $allroles[$row->id]->localname;
-                        echo "<option value=\"$show_role_id\">$show_role_name</option>";
-                    }
-                    ?>
-                </select>
-            </td>
-            <td width="60" align="center">&nbsp;</td>
-            <td width="450" align="center">
-                <input type="submit" name="submit" value="<?php echo get_string('enroll', 'tool_enrol_assistant'); ?>"
-                       class="button01"/>
-            </td>
-        </tr>
-    </form>
-
-    <tr>
-        <td>
-            <form action="view.php" method="post" name="f004" id="f003">
-                <input type="submit" name="submit3" value="<?php echo get_string('reset', 'tool_enrol_assistant'); ?>"
-                       class="button01"/>
+            <form name="s001" action="view.php" method="post">
+                <td colspan="3">
+                    <input name="such_nutzer" type="text" style="width:350px;" class="liste01"/>
+                    <input type="submit" name="submit_s1"
+                           value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
+                    <br/><br/>
+                </td>
             </form>
-        </td>
-        <td></td><td></td>
-    </tr>
-</table>
+        </tr>
+        <form name="f001" action="view.php" method="post">
+            <tr>
+                <td width="450" align="center">
+                    <select name="liste01[]" size="18" multiple style="width:450px;" class="liste01">
+                        <?php
+                        if (array_key_exists('such_nutzer', $_POST)) {
+                            $such_nutzer = '%' . strtolower($_POST['such_nutzer']) . '%';
 
+                            $sql = "SELECT * FROM {user} " .
+                                "WHERE deleted != 1 " .
+                                "  AND ( lower(idnumber) LIKE ? OR lower(firstname) LIKE ? OR lower(lastname) LIKE ? OR  lower(email) LIKE ? ) " .
+                                "ORDER BY lastname ASC";
+                            $result = $DB->get_records_sql($sql, array($such_nutzer, $such_nutzer, $such_nutzer, $such_nutzer));
+                            foreach ($result as $row) {
+                                $id = $row->id;
+                                $nachname = $row->lastname;
+                                $nachname = utf8_decode($nachname);
+                                $vorname = $row->firstname;
+                                $vorname = utf8_decode($vorname);
+                                $emailadresse = $row->email;
+                                $username = $row->username;
+
+                                $checkstatus = 0;
+                                foreach ($_SESSION['werte'] as $checkid) {
+                                    if ($id == $checkid) {
+                                        $checkstatus = 1;
+                                    } else {
+                                    }
+                                }
+
+                                if ($checkstatus == 1) {
+                                } else {
+                                    echo "<option value=\"$id\" title=\"$username\">$nachname $vorname ($emailadresse)</option>";
+                                }
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td width="60" align="center">
+                    <input type="submit" name="ein" value=" &lt;=&gt; " class="button01"/>
+                </td>
+                <td width="450" align="center">
+                    <select name="liste02[]" size="18" multiple style="width:450px;" class="liste02">
+                        <?php
+                        foreach ($_SESSION['werte'] as $userid) {
+                            $sql = "SELECT * FROM {user} WHERE id = ?";
+                            $result = $DB->get_record_sql($sql, array($userid));
+                            $nachname = $result->lastname;
+                            $vorname = $result->firstname;
+                            $emailadresse = $result->email;
+                            echo "<option value=\"$userid\">$nachname $vorname ($emailadresse)</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+        </form>
+    </table>
+    <br/>
+    <table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
+        <tr>
+            <td colspan="3">
+                <?php echo get_string('courses', 'tool_enrol_assistant'); ?>:
+            </td>
+        </tr>
+        <tr>
+            <form name="s002" action="view.php" method="post">
+                <td colspan="3">
+                    <input name="such_kurse" type="text" style="width:350px;" class="liste01"/>
+                    <input type="submit" name="submit_s2"
+                           value="<?php echo get_string('search', 'tool_enrol_assistant'); ?>" class="button01"/>
+                    <br/><br/>
+                </td>
+            </form>
+        </tr>
+        <form name="f002" action="view.php" method="post">
+            <tr>
+                <td width="450" align="center">
+                    <select name="liste03[]" size="18" multiple style="width:450px;" class="liste01">
+                        <?php
+                        if (array_key_exists('such_kurse', $_POST)) {
+                            $such_kurse = '%' . strtolower($_POST['such_kurse']) . '%';
+
+                            $sql = "SELECT * FROM {course} 
+                             WHERE id != 1 
+                               AND (lower(fullname) LIKE ? OR lower(shortname) LIKE ? OR idnumber LIKE ?)
+                          ORDER BY fullname ASC";
+                            $result = $DB->get_records_sql($sql, array($such_kurse, $such_kurse, $such_kurse));
+                            foreach ($result as $row) {
+                                $kid = $row->id;
+                                $idnumber = $row->idnumber;
+                                $fullname = $row->fullname;
+                                $shortname = $row->shortname;
+
+                                $checkstatusk = 0;
+                                foreach ($_SESSION['kurse'] as $checkkid) {
+                                    if ($kid == $checkkid) {
+                                        $checkstatusk = 1;
+                                    } else {
+                                    }
+                                }
+
+                                if ($checkstatusk == 1) {
+                                } else {
+                                    echo "<option value=\"$kid\" title=\"$shortname\">[$idnumber] $fullname</option>";
+                                }
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td width="60" align="center">
+                    <input type="submit" name="kein" value=" &lt;=&gt; " class="button01"/>
+                </td>
+                <td width="450" align="center">
+                    <select name="liste04[]" size="18" multiple style="width:450px;" class="liste02">
+                        <?php
+                        foreach ($_SESSION['kurse'] as $kurseid) {
+                            $sql = "SELECT * FROM {course} WHERE id = ?";
+                            $result = $DB->get_record_sql($sql, array($kurseid));
+                            $idnumber = $result->idnumber;
+                            $fullname = $result->fullname;
+                            $shortname = $result->shortname;
+                            echo "<option value=\"$kurseid\" title=\"$shortname\">[$idnumber] $fullname</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+        </form>
+    </table>
+
+    <table width="960" border="0" cellspacing="0" cellpadding="0" class="table01">
+        <form name="f003" action="enrol.php" method="post">
+            <tr>
+                <td colspan="3">
+                    <?php echo get_string('roles', 'tool_enrol_assistant'); ?>:
+                </td>
+            </tr>
+            <tr>
+                <td width="450" align="center" rows="6">
+                    <select name="userrole" size="11" style="width:450px" class="liste01">
+                        <?php
+                        $allroles = role_fix_names(get_all_roles($context), $context);
+
+                        $result = $DB->get_records('role');
+                        foreach ($result as $row) {
+                            $show_role_id = $row->id;
+                            $show_role_name = $allroles[$row->id]->localname;
+                            echo "<option value=\"$show_role_id\">$show_role_name</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td width="60" align="center">&nbsp;</td>
+                <td width="450" align="center">
+                    <input type="submit" name="submit" value="<?php echo get_string('enroll', 'tool_enrol_assistant'); ?>"
+                           class="button01"/>
+                </td>
+            </tr>
+        </form>
+
+        <tr>
+            <td>
+                <form action="view.php" method="post" name="f004" id="f003">
+                    <input type="submit" name="submit3" value="<?php echo get_string('reset', 'tool_enrol_assistant'); ?>"
+                           class="button01"/>
+                </form>
+            </td>
+            <td></td><td></td>
+        </tr>
+    </table>
+</div>
 
 <?php echo $OUTPUT->footer(); ?>
